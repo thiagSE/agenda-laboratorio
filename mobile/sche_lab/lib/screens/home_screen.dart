@@ -1,15 +1,35 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:sche_lab/models/schedule_model.dart';
+
+import 'create_schedule_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    List<Schedule> schedules = Schedule.schedules;
+    List<Schedule> schedules = [];
+    // List<Schedule> schedules = Schedule.schedules;
     initializeDateFormatting();
+
+    _floatButtonAdd() {
+      if (schedules.isNotEmpty) {
+        return FloatingActionButton(
+          onPressed: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => CreateScheduleScreen()));
+          },
+          focusElevation: 1,
+          backgroundColor: Color.fromRGBO(64, 123, 255, 1),
+          child: const Icon(Icons.add),
+        );
+      }
+    }
 
     return Container(
         decoration: BoxDecoration(color: Color.fromRGBO(245, 245, 245, 1)),
@@ -20,6 +40,7 @@ class HomeScreen extends StatelessWidget {
               backgroundColor: Colors.transparent,
               elevation: 0,
             ),
+            floatingActionButton: _floatButtonAdd(),
             bottomNavigationBar: const _CustomAppBar(),
             body: SingleChildScrollView(
               child: Column(
@@ -40,149 +61,80 @@ class HomeScreen extends StatelessWidget {
                           SizedBox(
                             height: 24,
                           ),
-                          Row(
-                            children: [
-                              Text(
-                                'Horário',
-                                style: TextStyle(
-                                    color: Color.fromRGBO(120, 120, 120, 1),
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 16),
-                              ),
-                              SizedBox(
-                                width: 30,
-                              ),
-                              Text(
-                                'Curso',
-                                style: TextStyle(
-                                    color: Color.fromRGBO(120, 120, 120, 1),
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 16),
-                              ),
-                            ],
-                          ),
-                          ListView.builder(
-                              physics: NeverScrollableScrollPhysics(),
-                              shrinkWrap: true,
-                              itemCount: schedules.length,
-                              itemBuilder: (context, index) {
-                                return Container(
-                                  margin: EdgeInsets.only(top: 24),
-                                  child: Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Flexible(
-                                        flex: 1,
-                                        child: Container(
-                                          alignment: Alignment.centerLeft,
-                                          child: Column(
-                                            children: [
-                                              Text(
-                                                  DateFormat(
-                                                          DateFormat
-                                                              .HOUR24_MINUTE,
-                                                          'pt_BR')
-                                                      .format(schedules[index]
-                                                          .endTime),
-                                                  style: TextStyle(
-                                                      color: Color.fromRGBO(
-                                                          28, 28, 28, 1),
-                                                      fontSize: 14,
-                                                      fontWeight:
-                                                          FontWeight.w600)),
-                                              SizedBox(
-                                                height: 4,
-                                              ),
-                                              Text(
-                                                DateFormat(
-                                                        DateFormat
-                                                            .HOUR24_MINUTE,
-                                                        'pt_BR')
-                                                    .format(schedules[index]
-                                                        .startTime),
-                                                style: TextStyle(
-                                                    color: Color.fromRGBO(
-                                                        171, 171, 171, 1),
-                                                    fontWeight:
-                                                        FontWeight.w400),
-                                              ),
-                                            ],
-                                          ),
+                          if (schedules.isNotEmpty)
+                            Row(
+                              children: [
+                                Text(
+                                  'Horário',
+                                  style: TextStyle(
+                                      color: Color.fromRGBO(120, 120, 120, 1),
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 12),
+                                ),
+                                SizedBox(
+                                  width: 36,
+                                ),
+                                Text(
+                                  'Curso',
+                                  style: TextStyle(
+                                      color: Color.fromRGBO(120, 120, 120, 1),
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 12),
+                                ),
+                              ],
+                            ),
+                          (schedules.isEmpty)
+                              ? Container(
+                                  child: Column(children: [
+                                    Image.asset(
+                                        'assets/images/man-schedule.png'),
+                                    SizedBox(
+                                      height: 40,
+                                    ),
+                                    Text(
+                                      'Sem agendametnos no momento',
+                                      style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w600,
+                                          color: Color.fromRGBO(28, 28, 28, 1)),
+                                    ),
+                                    SizedBox(
+                                      height: 4,
+                                    ),
+                                    Text(
+                                      'Vamos agendar um horário?',
+                                      style: TextStyle(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w300,
+                                          color:
+                                              Color.fromRGBO(120, 120, 120, 1)),
+                                    ),
+                                    SizedBox(
+                                      height: 24,
+                                    ),
+                                    ElevatedButton.icon(
+                                      icon: Icon(Icons.add),
+                                      label: Text(
+                                        "Criar agendamento",
+                                        style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w600),
+                                      ),
+                                      onPressed: () => print("it's pressed"),
+                                      style: ElevatedButton.styleFrom(
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 16, horizontal: 68.0),
+                                        backgroundColor:
+                                            Color.fromRGBO(64, 123, 255, 1),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(32.0),
                                         ),
                                       ),
-                                      Flexible(
-                                        flex: 3,
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(16),
-                                            border: Border.all(
-                                                color: Color.fromRGBO(
-                                                    217, 217, 217, .5)),
-                                            color: index == 0
-                                                ? Color.fromRGBO(
-                                                    64, 123, 255, 1)
-                                                : Colors.white,
-                                          ),
-                                          padding: const EdgeInsets.symmetric(
-                                              vertical: 14.0, horizontal: 16),
-                                          alignment: Alignment.centerLeft,
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Container(
-                                                  child: Text(
-                                                schedules[index].title,
-                                                maxLines: 1,
-                                                overflow: TextOverflow.ellipsis,
-                                                style: TextStyle(
-                                                    fontSize: 16,
-                                                    fontWeight: FontWeight.w600,
-                                                    color: index == 0
-                                                        ? Colors.white
-                                                        : Color.fromRGBO(
-                                                            25, 25, 25, 1)),
-                                              )),
-                                              SizedBox(
-                                                height: 2,
-                                              ),
-                                              Container(
-                                                  child: Text(
-                                                schedules[index].description,
-                                                style: TextStyle(
-                                                    color: index == 0
-                                                        ? Colors.white
-                                                        : Color.fromRGBO(
-                                                            171, 171, 171, 1),
-                                                    fontSize: 14),
-                                              )),
-                                              SizedBox(
-                                                height: 18,
-                                              ),
-                                              Container(
-                                                  child: Text(
-                                                      schedules[index].userName,
-                                                      style: TextStyle(
-                                                          color: index == 0
-                                                              ? Colors.white
-                                                              : Color.fromRGBO(
-                                                                  25,
-                                                                  25,
-                                                                  25,
-                                                                  1),
-                                                          fontSize: 14,
-                                                          fontWeight: FontWeight
-                                                              .w600))),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              }),
+                                    ),
+                                  ]),
+                                )
+                              : ScheduleListComponent(schedules),
                         ],
                       ),
                     ),
@@ -190,6 +142,108 @@ class HomeScreen extends StatelessWidget {
                 ],
               ),
             )));
+  }
+
+  ListView ScheduleListComponent(List<Schedule> schedules) {
+    return ListView.builder(
+        physics: NeverScrollableScrollPhysics(),
+        shrinkWrap: true,
+        itemCount: schedules.length,
+        itemBuilder: (context, index) {
+          return Container(
+            margin: EdgeInsets.only(top: 24),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Flexible(
+                  flex: 1,
+                  child: Container(
+                    alignment: Alignment.centerLeft,
+                    child: Column(
+                      children: [
+                        Text(
+                            DateFormat(DateFormat.HOUR24_MINUTE, 'pt_BR')
+                                .format(schedules[index].startTime),
+                            style: TextStyle(
+                              color: Color.fromRGBO(28, 28, 28, 1),
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                            )),
+                        SizedBox(
+                          height: 4,
+                        ),
+                        Text(
+                          DateFormat(DateFormat.HOUR24_MINUTE, 'pt_BR')
+                              .format(schedules[index].endTime),
+                          style: TextStyle(
+                              color: Color.fromRGBO(171, 171, 171, 1),
+                              fontWeight: FontWeight.w400,
+                              fontSize: 12),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Flexible(
+                  flex: 3,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(16),
+                      border:
+                          Border.all(color: Color.fromRGBO(217, 217, 217, .5)),
+                      color: index == 0
+                          ? Color.fromRGBO(64, 123, 255, 1)
+                          : Colors.white,
+                    ),
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 14.0, horizontal: 16),
+                    alignment: Alignment.centerLeft,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                            child: Text(
+                          schedules[index].title,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                              color: index == 0
+                                  ? Colors.white
+                                  : Color.fromRGBO(25, 25, 25, 1)),
+                        )),
+                        SizedBox(
+                          height: 2,
+                        ),
+                        Container(
+                            child: Text(
+                          schedules[index].description,
+                          style: TextStyle(
+                              color: index == 0
+                                  ? Colors.white
+                                  : Color.fromRGBO(171, 171, 171, 1),
+                              fontSize: 12),
+                        )),
+                        SizedBox(
+                          height: 18,
+                        ),
+                        Container(
+                            child: Text(schedules[index].userName,
+                                style: TextStyle(
+                                    color: index == 0
+                                        ? Colors.white
+                                        : Color.fromRGBO(25, 25, 25, 1),
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w600))),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
+        });
   }
 }
 
@@ -205,18 +259,18 @@ class SectionHeader extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(
-            'Agendamentos do mês',
-            style: TextStyle(
-              color: Color.fromRGBO(120, 120, 120, 1),
-              fontSize: 18,
-            ),
-          ),
+          Text('Agendamentos do mês',
+              style: GoogleFonts.poppins(
+                textStyle: TextStyle(
+                  color: Color.fromRGBO(120, 120, 120, 1),
+                  fontSize: 16,
+                ),
+              )),
           Text(
             'Ver todos',
             style: TextStyle(
               color: Color.fromRGBO(120, 120, 120, 1),
-              fontSize: 18,
+              fontSize: 16,
             ),
           )
         ],
@@ -242,7 +296,6 @@ class _TitleMain extends StatelessWidget {
                 style: TextStyle(
                     fontWeight: FontWeight.w400,
                     color: Color.fromRGBO(204, 204, 204, 1),
-                    fontFamily: 'Poppins',
                     fontSize: 18)),
             const SizedBox(height: 4),
             Text(
@@ -251,7 +304,6 @@ class _TitleMain extends StatelessWidget {
                 style: TextStyle(
                     fontWeight: FontWeight.w700,
                     color: Color.fromRGBO(64, 123, 255, 1),
-                    fontFamily: 'Poppins',
                     fontSize: 28)),
             const SizedBox(
               height: 24,
