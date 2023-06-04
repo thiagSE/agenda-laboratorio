@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'create_schedule_screen.dart';
+
 class EmptyHomeComponent extends StatelessWidget {
   const EmptyHomeComponent({
     super.key,
@@ -39,7 +41,10 @@ class EmptyHomeComponent extends StatelessWidget {
             "Criar agendamento",
             style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
           ),
-          onPressed: () => print("it's pressed"),
+          onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: ((context) => CreateScheduleScreen()))),
           style: ElevatedButton.styleFrom(
             padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 68.0),
             backgroundColor: Color.fromRGBO(64, 123, 255, 1),
