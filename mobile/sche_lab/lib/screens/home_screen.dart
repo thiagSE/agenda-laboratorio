@@ -1,64 +1,90 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:http/http.dart' as http;
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
-import 'package:sche_lab/models/schedule_model.dart';
-import 'package:sche_lab/screens/empty_home_screen.dart';
 
-import 'create_schedule_screen.dart';
+import '../components/empty_home_screen.dart';
+import '../models/schedule_model.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
-  Future<http.Response> getSchedules() async {
-    final response = await http.get(
-      Uri.parse('http://localhost:8080/api'),
-    );
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
 
-    return response;
-  }
+class Weeks {
+  final String weekDay;
+  final String day;
 
-  Future<void> sendRegistrationData() async {
-    String name = 'Lucas Vieira';
-    String email = 'lucas@gmail.com';
-    String matricula = '01301103';
-    String password = 'admin@123';
+  Weeks({required this.day, required this.weekDay});
+}
 
-    final response = await http.post(
-      Uri.parse('http://localhost:8080/api/cadastro'),
-      headers: {'Content-type': 'application/json'},
-      body: jsonEncode({
-        'nome': name,
-        'email': email,
-        'matricula': matricula,
-        'senha': password
-      }),
-    );
-
-    if (response.statusCode == 200) {
-      print('Dados enviados com sucesso');
-    } else {
-      print('Erro ao enviar os dados, ${response.statusCode}');
-    }
-  }
-
+class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
-    List<Schedule> schedules = [];
-    // List<Schedule> schedules = Schedule.schedules;
+    List<Weeks> daysOfMonth = [
+      Weeks(day: '1', weekDay: 'SEG'),
+      Weeks(day: '2', weekDay: 'TER'),
+      Weeks(day: '3', weekDay: 'QUAR'),
+      Weeks(day: '4', weekDay: 'QUI'),
+      Weeks(day: '5', weekDay: 'SEX'),
+      Weeks(day: '6', weekDay: 'SAB'),
+      Weeks(day: '7', weekDay: 'DOM'),
+      Weeks(day: '8', weekDay: 'SEG'),
+      Weeks(day: '9', weekDay: 'SEG'),
+      Weeks(day: '10', weekDay: 'SEG'),
+      Weeks(day: '11', weekDay: 'SEG'),
+      Weeks(day: '12', weekDay: 'SEG'),
+    ];
+
+    // List<Schedule> schedules = [];
+    ScrollController _controller;
+    List<Schedule> schedules = Schedule.schedules;
+    final weekDates = [];
     initializeDateFormatting();
 
+    void generateDates() {
+      // print(DateTime.now().subtract(Duration(days: 2)).day);
+      // print(DateTime.now().subtract(Duration(days: 1)).day);
+      // print(DateTime.now().day);
+      // print(DateTime.now().add(Duration(days: 1)));
+      // print(DateTime.now().add(Duration(days: 2)).day);
+      // print(
+      //     DateFormat.E('pt_BR').format(DateTime.now().add(Duration(days: 2))));
+    }
+
+    // _scrollListener() {
+    //   _controller.animateTo(
+    //     100.0,
+    //     curve: Curves.easeOut,
+    //     duration: const Duration(milliseconds: 300),
+    //   );
+    // }
+
+    void scrollToCurrentPosistion() {}
+    @override
+    void initState() {
+      _controller = ScrollController();
+      // _controller.addListener();
+      super.initState();
+    }
+
+    setState(() {
+      scrollToCurrentPosistion();
+    });
+
+    @override
     _floatButtonAdd() {
       if (schedules.isNotEmpty) {
         return FloatingActionButton(
           onPressed: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => CreateScheduleScreen()));
+            generateDates();
+            scrollToCurrentPosistion();
+            // Navigator.push(
+            //     context,
+            //     MaterialPageRoute(
+            //         builder: (context) => CreateScheduleScreen()));
           },
           focusElevation: 1,
           backgroundColor: Color.fromRGBO(64, 123, 255, 1),
@@ -82,6 +108,36 @@ class HomeScreen extends StatelessWidget {
               child: Column(
                 children: [
                   const _TitleMain(),
+                  Container(
+                    margin: const EdgeInsets.only(bottom: 24),
+                    padding: const EdgeInsets.only(left: 4.0),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: SizedBox(
+                            height: 95,
+                            child: ListView.builder(
+                                scrollDirection: Axis.horizontal,
+                                shrinkWrap: true,
+                                itemCount: daysOfMonth.length,
+                                itemBuilder: (context, index) {
+                                  return GestureDetector(
+                                    onTap: () {
+                                      print("button pressed");
+                                      print(daysOfMonth[index].day);
+                                      print(daysOfMonth[index].weekDay);
+                                    },
+                                    child: WeekDayCard(
+                                        weekDay: daysOfMonth[index].weekDay,
+                                        day: daysOfMonth[index].day),
+                                  );
+                                }),
+                          ),
+                        ),
+                      ],
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    ),
+                  ),
                   Container(
                     decoration: BoxDecoration(
                       color: Colors.white,
@@ -107,6 +163,58 @@ class HomeScreen extends StatelessWidget {
                 ],
               ),
             )));
+  }
+}
+
+class WeekDayCard extends StatelessWidget {
+  WeekDayCard({super.key, required this.weekDay, required this.day});
+
+  final String weekDay;
+  final String day;
+
+  bool isCurrentDay() {
+    final currentDate = DateTime.now();
+    final currentDay = DateFormat.d().format(currentDate);
+
+    if (currentDay == day) return true;
+
+    return false;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 75,
+      margin: EdgeInsets.only(right: 12),
+      padding: const EdgeInsets.only(left: 8, right: 8),
+      decoration: BoxDecoration(
+        color: isCurrentDay() ? Color.fromRGBO(64, 123, 255, 1) : Colors.white,
+        borderRadius: BorderRadius.circular(14.0),
+      ),
+      child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+        Text(
+          this.weekDay,
+          style: TextStyle(
+              color: isCurrentDay()
+                  ? Colors.white
+                  : Color.fromRGBO(64, 123, 255, 1),
+              fontWeight: FontWeight.w400,
+              fontSize: 12),
+        ),
+        const SizedBox(
+          height: 4,
+        ),
+        Text(
+          this.day,
+          style: TextStyle(
+              color: isCurrentDay()
+                  ? Colors.white
+                  : Color.fromRGBO(64, 123, 255, 1),
+              fontWeight: FontWeight.w700,
+              fontSize: 28),
+        )
+      ]),
+    );
   }
 }
 

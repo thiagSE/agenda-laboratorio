@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'create_schedule_screen.dart';
+import '../screens/create_schedule_screen.dart';
 
 class EmptyHomeComponent extends StatelessWidget {
   const EmptyHomeComponent({
