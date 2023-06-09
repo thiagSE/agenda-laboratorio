@@ -8,14 +8,38 @@ class CreateScheduleScreen extends StatefulWidget {
   State<CreateScheduleScreen> createState() => _CreateScheduleScreenState();
 }
 
+class Turma {
+  final String nome;
+  final String turno;
+  final int periodo;
+
+  Turma({required this.nome, required this.turno, required this.periodo});
+}
+
+List<Turma> list = <Turma>[
+  Turma(
+      nome: 'Analise e desenvolvimento de sistemas',
+      turno: 'Noite',
+      periodo: 1),
+  Turma(nome: 'Engenharia de Software', turno: 'Manhã', periodo: 2),
+  Turma(
+      nome: 'Analise e desenvolvimento de sistemas',
+      turno: 'Manhã',
+      periodo: 3),
+  Turma(nome: 'Ciência da Computação', turno: 'Noite', periodo: 3),
+];
+Turma dropdownValue = list.first;
+
 class _CreateScheduleScreenState extends State<CreateScheduleScreen> {
   TextEditingController dateController = TextEditingController();
   TextEditingController startAtController = TextEditingController();
   TextEditingController endsAtController = TextEditingController();
+  TextEditingController descriptionController = TextEditingController();
 
   String displayText = '';
   String displayStartAt = '';
   String displayEndsAt = '';
+  String displayDescription = '';
 
   @override
   Widget build(BuildContext context) {
@@ -34,32 +58,45 @@ class _CreateScheduleScreenState extends State<CreateScheduleScreen> {
       bottomNavigationBar: _CustomAppBar(),
       body: SafeArea(
           child: Scaffold(
-        body: Container(
+        body: SingleChildScrollView(
           child: Padding(
             padding:
                 const EdgeInsets.symmetric(vertical: 24.0, horizontal: 28.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                SizedBox(
+                  height: 32,
+                ),
                 Text('Agende um horário',
                     style: TextStyle(
                         fontWeight: FontWeight.w700,
                         color: Color.fromRGBO(64, 123, 255, 1),
                         fontSize: 28)),
+                SizedBox(
+                  height: 24,
+                ),
                 TextField(
                   controller: dateController,
                   keyboardType: TextInputType.none,
+                  style: TextStyle(
+                      color: Colors.black87, fontWeight: FontWeight.bold),
                   decoration: InputDecoration(
                     border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(28),
+                        borderRadius: BorderRadius.circular(8),
                         borderSide:
                             BorderSide(width: 0, style: BorderStyle.none)),
                     hintText: 'Data',
-                    hintStyle:
-                        TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    hintStyle: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black87),
                     filled: true,
-                    fillColor: Colors.amber,
-                    prefixIcon: Icon(Icons.date_range),
+                    fillColor: Color.fromRGBO(243, 243, 243, 1),
+                    prefixIcon: Icon(
+                      Icons.date_range,
+                      color: Colors.black87,
+                    ),
                   ),
                   readOnly: true,
                   onTap: () async {
@@ -79,16 +116,77 @@ class _CreateScheduleScreenState extends State<CreateScheduleScreen> {
                   },
                 ),
                 SizedBox(
-                  height: 5,
+                  height: 24,
+                ),
+                DropdownButtonFormField<Turma>(
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide:
+                            BorderSide(width: 0, style: BorderStyle.none)),
+                    hintStyle: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.red),
+                    filled: true,
+                    fillColor: Color.fromRGBO(243, 243, 243, 1),
+                    prefixIcon: Icon(
+                      Icons.school_outlined,
+                      color: Colors.black87,
+                    ),
+                  ),
+                  value: dropdownValue,
+                  icon: const Icon(Icons.keyboard_arrow_down_outlined),
+                  isExpanded: true,
+                  borderRadius: BorderRadius.circular(8),
+                  style: TextStyle(
+                    color: Colors.black87,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  onChanged: (Turma? value) {
+                    // This is called when the user selects an item.
+                    setState(() {
+                      dropdownValue = value!;
+                    });
+                  },
+                  items: list.map<DropdownMenuItem<Turma>>((Turma value) {
+                    return DropdownMenuItem<Turma>(
+                      value: value,
+                      child: Text(
+                        "${value.periodo}° Período ${value.nome} / ${value.turno}",
+                        style: TextStyle(
+                            color: Colors.black87,
+                            fontWeight: FontWeight.bold,
+                            overflow: TextOverflow.visible),
+                      ),
+                    );
+                  }).toList(),
+                ),
+                SizedBox(
+                  height: 24,
                 ),
                 TextField(
                   controller: startAtController,
                   keyboardType: TextInputType.none,
+                  style: TextStyle(
+                      color: Colors.black87, fontWeight: FontWeight.bold),
                   decoration: InputDecoration(
-                      hintText: 'Início',
-                      hintStyle:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                      prefixIcon: Icon(Icons.access_time)),
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide:
+                            BorderSide(width: 0, style: BorderStyle.none)),
+                    hintText: 'Início',
+                    hintStyle: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black87),
+                    filled: true,
+                    fillColor: Color.fromRGBO(243, 243, 243, 1),
+                    prefixIcon: Icon(
+                      Icons.access_time,
+                      color: Colors.black87,
+                    ),
+                  ),
                   readOnly: true,
                   onTap: () async {
                     var time = await showTimePicker(
@@ -101,14 +199,30 @@ class _CreateScheduleScreenState extends State<CreateScheduleScreen> {
                     }
                   },
                 ),
+                SizedBox(
+                  height: 24,
+                ),
                 TextField(
                   controller: endsAtController,
                   keyboardType: TextInputType.none,
+                  style: TextStyle(
+                      color: Colors.black87, fontWeight: FontWeight.bold),
                   decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide:
+                            BorderSide(width: 0, style: BorderStyle.none)),
                     hintText: 'Término',
-                    hintStyle:
-                        TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                    prefixIcon: Icon(Icons.access_time_filled),
+                    hintStyle: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black87),
+                    filled: true,
+                    fillColor: Color.fromRGBO(243, 243, 243, 1),
+                    prefixIcon: Icon(
+                      Icons.access_time_filled,
+                      color: Colors.black87,
+                    ),
                   ),
                   readOnly: true,
                   onTap: () async {
@@ -121,6 +235,38 @@ class _CreateScheduleScreenState extends State<CreateScheduleScreen> {
                       });
                     }
                   },
+                ),
+                SizedBox(
+                  height: 24,
+                ),
+                TextField(
+                  maxLines: 6,
+                  controller: descriptionController,
+                  style: TextStyle(
+                      color: Colors.black87, fontWeight: FontWeight.bold),
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide:
+                            BorderSide(width: 0, style: BorderStyle.none)),
+                    hintText: 'Descrição',
+                    hintStyle: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black87),
+                    filled: true,
+                    fillColor: Color.fromRGBO(243, 243, 243, 1),
+                    prefixIcon: Padding(
+                      padding: const EdgeInsets.only(bottom: 105),
+                      child: Icon(
+                        Icons.subject,
+                        color: Colors.black87,
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 24,
                 ),
                 ElevatedButton.icon(
                   icon: Icon(Icons.add),

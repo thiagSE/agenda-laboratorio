@@ -1,7 +1,9 @@
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
+import 'package:sche_lab/screens/create_schedule_screen.dart';
 
 import '../components/empty_home_screen.dart';
 import '../models/schedule_model.dart';
@@ -38,20 +40,44 @@ class _HomeScreenState extends State<HomeScreen> {
       Weeks(day: '12', weekDay: 'SEG'),
     ];
 
-    // List<Schedule> schedules = [];
     ScrollController _controller;
-    List<Schedule> schedules = Schedule.schedules;
-    final weekDates = [];
+    List<Schedule> schedules = [];
+    // List<Schedule> schedules = Schedule.schedules;
+    // final weekDates = [];
     initializeDateFormatting();
 
+    int daysInMonth(DateTime date) {
+      var firstDayThisMonth = new DateTime(date.year, date.month, date.day);
+      var firstDayNextMonth = new DateTime(firstDayThisMonth.year,
+          firstDayThisMonth.month + 1, firstDayThisMonth.day);
+      return firstDayNextMonth.difference(firstDayThisMonth).inDays;
+    }
+
+    void addToList(number) {
+      var dateNow = DateTime.now();
+      var date = DateTime(dateNow.year, dateNow.month, number);
+      Weeks(
+          day: DateFormat.d('pt_BR').format(date),
+          weekDay: DateFormat.E('pt_BR').format(date));
+      setState(() {
+        daysOfMonth = 'asdasd' as List<Weeks>;
+      });
+    }
+
     void generateDates() {
-      // print(DateTime.now().subtract(Duration(days: 2)).day);
-      // print(DateTime.now().subtract(Duration(days: 1)).day);
-      // print(DateTime.now().day);
-      // print(DateTime.now().add(Duration(days: 1)));
-      // print(DateTime.now().add(Duration(days: 2)).day);
-      // print(
-      //     DateFormat.E('pt_BR').format(DateTime.now().add(Duration(days: 2))));
+      var dateNow = DateTime.now();
+      var now = DateTime(dateNow.year, dateNow.month);
+
+      // Getting the total number of days of the month
+      var totalDays = daysInMonth(now);
+
+      for (var i = 1; i <= totalDays; i++) {
+        addToList(i);
+      }
+
+      // for (var date in listOfDates) {
+      //   print(date);
+      // }
     }
 
     // _scrollListener() {
@@ -81,10 +107,10 @@ class _HomeScreenState extends State<HomeScreen> {
           onPressed: () {
             generateDates();
             scrollToCurrentPosistion();
-            // Navigator.push(
-            //     context,
-            //     MaterialPageRoute(
-            //         builder: (context) => CreateScheduleScreen()));
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => CreateScheduleScreen()));
           },
           focusElevation: 1,
           backgroundColor: Color.fromRGBO(64, 123, 255, 1),
