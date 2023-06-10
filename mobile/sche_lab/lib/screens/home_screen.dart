@@ -25,26 +25,18 @@ class Weeks {
 class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
-    List<Weeks> daysOfMonth = [
-      Weeks(day: '1', weekDay: 'SEG'),
-      Weeks(day: '2', weekDay: 'TER'),
-      Weeks(day: '3', weekDay: 'QUAR'),
-      Weeks(day: '4', weekDay: 'QUI'),
-      Weeks(day: '5', weekDay: 'SEX'),
-      Weeks(day: '6', weekDay: 'SAB'),
-      Weeks(day: '7', weekDay: 'DOM'),
-      Weeks(day: '8', weekDay: 'SEG'),
-      Weeks(day: '9', weekDay: 'SEG'),
-      Weeks(day: '10', weekDay: 'SEG'),
-      Weeks(day: '11', weekDay: 'SEG'),
-      Weeks(day: '12', weekDay: 'SEG'),
-    ];
+    List<Weeks> daysOfMonth = [];
+    // List<Schedule> schedules = [];
+    List<Schedule> schedules = Schedule.schedules;
 
-    ScrollController _controller;
-    List<Schedule> schedules = [];
-    // List<Schedule> schedules = Schedule.schedules;
-    // final weekDates = [];
     initializeDateFormatting();
+
+    final ScrollController _controller = ScrollController();
+
+    void _scrollDown() {
+      _controller.animateTo(2 * 74,
+          duration: const Duration(milliseconds: 1000), curve: Curves.bounceIn);
+    }
 
     int daysInMonth(DateTime date) {
       var firstDayThisMonth = new DateTime(date.year, date.month, date.day);
@@ -56,11 +48,14 @@ class _HomeScreenState extends State<HomeScreen> {
     void addToList(number) {
       var dateNow = DateTime.now();
       var date = DateTime(dateNow.year, dateNow.month, number);
-      Weeks(
+      var week = Weeks(
           day: DateFormat.d('pt_BR').format(date),
           weekDay: DateFormat.E('pt_BR').format(date));
+
+      List<Weeks> copy = daysOfMonth;
+      copy.add(week);
       setState(() {
-        daysOfMonth = 'asdasd' as List<Weeks>;
+        daysOfMonth = copy;
       });
     }
 
@@ -68,7 +63,6 @@ class _HomeScreenState extends State<HomeScreen> {
       var dateNow = DateTime.now();
       var now = DateTime(dateNow.year, dateNow.month);
 
-      // Getting the total number of days of the month
       var totalDays = daysInMonth(now);
 
       for (var i = 1; i <= totalDays; i++) {
@@ -76,33 +70,19 @@ class _HomeScreenState extends State<HomeScreen> {
       }
     }
 
-    // _scrollListener() {
-    //   _controller.animateTo(
-    //     100.0,
-    //     curve: Curves.easeOut,
-    //     duration: const Duration(milliseconds: 300),
-    //   );
-    // }
+    generateDates();
+    _scrollDown();
 
-    void scrollToCurrentPosistion() {}
     @override
     void initState() {
-      _controller = ScrollController();
-      // _controller.addListener();
       super.initState();
     }
-
-    setState(() {
-      scrollToCurrentPosistion();
-    });
 
     @override
     _floatButtonAdd() {
       if (schedules.isNotEmpty) {
         return FloatingActionButton(
           onPressed: () {
-            generateDates();
-            scrollToCurrentPosistion();
             Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -132,7 +112,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   const _TitleMain(),
                   Container(
                     margin: const EdgeInsets.only(bottom: 24),
-                    padding: const EdgeInsets.only(left: 4.0),
+                    padding: const EdgeInsets.only(left: 8.0),
                     child: Row(
                       children: [
                         Expanded(
@@ -140,6 +120,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             height: 90,
                             child: ListView.builder(
                                 scrollDirection: Axis.horizontal,
+                                controller: _controller,
                                 shrinkWrap: true,
                                 itemCount: daysOfMonth.length,
                                 itemBuilder: (context, index) {
@@ -385,22 +366,15 @@ class SectionHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 24),
+      padding: const EdgeInsets.only(bottom: 16),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          Text('Agendamentos do mês',
+          Text('Agendamentos do dia',
               style: GoogleFonts.poppins(
                 textStyle: TextStyle(
                     color: Color.fromRGBO(120, 120, 120, 1), fontSize: 16),
               )),
-          Text(
-            'Ver todos',
-            style: TextStyle(
-              color: Color.fromRGBO(120, 120, 120, 1),
-              fontSize: 16,
-            ),
-          )
         ],
       ),
     );
@@ -433,9 +407,6 @@ class _TitleMain extends StatelessWidget {
                     fontWeight: FontWeight.w700,
                     color: Color.fromRGBO(64, 123, 255, 1),
                     fontSize: 28)),
-            const SizedBox(
-              height: 24,
-            )
           ]),
         ),
       ],
