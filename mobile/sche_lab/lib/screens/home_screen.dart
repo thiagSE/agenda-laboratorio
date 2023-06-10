@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
+import 'package:sche_lab/models/weeks.dart';
 import 'package:sche_lab/screens/create_schedule_screen.dart';
 
 import '../components/empty_home_screen.dart';
@@ -13,13 +14,6 @@ class HomeScreen extends StatefulWidget {
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
-}
-
-class Weeks {
-  final String weekDay;
-  final String day;
-
-  Weeks({required this.day, required this.weekDay});
 }
 
 class _HomeScreenState extends State<HomeScreen> {
@@ -48,9 +42,11 @@ class _HomeScreenState extends State<HomeScreen> {
     void addToList(number) {
       var dateNow = DateTime.now();
       var date = DateTime(dateNow.year, dateNow.month, number);
+
       var week = Weeks(
-          day: DateFormat.d('pt_BR').format(date),
-          weekDay: DateFormat.E('pt_BR').format(date));
+          day: int.parse(DateFormat.d('pt_BR').format(date)),
+          weekDay: DateFormat.E('pt_BR').format(date),
+          month: DateFormat.M('pt_BR').format(date));
 
       List<Weeks> copy = daysOfMonth;
       copy.add(week);
@@ -127,6 +123,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                   return GestureDetector(
                                     onTap: () {
                                       print("button pressed");
+                                      Schedule.getDaySchedule(
+                                          daysOfMonth[index].day);
                                       print(daysOfMonth[index].day);
                                       print(daysOfMonth[index].weekDay);
                                     },
@@ -173,13 +171,13 @@ class WeekDayCard extends StatelessWidget {
   WeekDayCard({super.key, required this.weekDay, required this.day});
 
   final String weekDay;
-  final String day;
+  final int day;
 
   bool isCurrentDay() {
     final currentDate = DateTime.now();
     final currentDay = DateFormat.d().format(currentDate);
 
-    if (currentDay == day) return true;
+    if (int.parse(currentDay) == day) return true;
 
     return false;
   }
@@ -196,7 +194,7 @@ class WeekDayCard extends StatelessWidget {
       ),
       child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
         Text(
-          this.weekDay,
+          weekDay,
           style: TextStyle(
               color: isCurrentDay()
                   ? Colors.white
@@ -208,7 +206,7 @@ class WeekDayCard extends StatelessWidget {
           height: 4,
         ),
         Text(
-          this.day,
+          "${day}",
           style: GoogleFonts.poppins(
               color: isCurrentDay()
                   ? Colors.white
