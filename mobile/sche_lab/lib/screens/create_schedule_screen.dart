@@ -41,6 +41,14 @@ class _CreateScheduleScreenState extends State<CreateScheduleScreen> {
   String displayEndsAt = '';
   String displayDescription = '';
 
+  void sendValuesToApi() {
+    print(dropdownValue.nome);
+    print(dateController.text);
+    print(startAtController.text);
+    print(endsAtController.text);
+    print(descriptionController.text);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -66,7 +74,7 @@ class _CreateScheduleScreenState extends State<CreateScheduleScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SizedBox(
-                  height: 32,
+                  height: 8,
                 ),
                 Text('Agende um horário',
                     style: TextStyle(
@@ -74,7 +82,7 @@ class _CreateScheduleScreenState extends State<CreateScheduleScreen> {
                         color: Color.fromRGBO(64, 123, 255, 1),
                         fontSize: 28)),
                 SizedBox(
-                  height: 24,
+                  height: 16,
                 ),
                 TextField(
                   controller: dateController,
@@ -116,7 +124,7 @@ class _CreateScheduleScreenState extends State<CreateScheduleScreen> {
                   },
                 ),
                 SizedBox(
-                  height: 24,
+                  height: 16,
                 ),
                 DropdownButtonFormField<Turma>(
                   decoration: InputDecoration(
@@ -163,7 +171,7 @@ class _CreateScheduleScreenState extends State<CreateScheduleScreen> {
                   }).toList(),
                 ),
                 SizedBox(
-                  height: 24,
+                  height: 16,
                 ),
                 TextField(
                   controller: startAtController,
@@ -200,7 +208,7 @@ class _CreateScheduleScreenState extends State<CreateScheduleScreen> {
                   },
                 ),
                 SizedBox(
-                  height: 24,
+                  height: 16,
                 ),
                 TextField(
                   controller: endsAtController,
@@ -237,7 +245,7 @@ class _CreateScheduleScreenState extends State<CreateScheduleScreen> {
                   },
                 ),
                 SizedBox(
-                  height: 24,
+                  height: 16,
                 ),
                 TextField(
                   maxLines: 6,
@@ -266,7 +274,7 @@ class _CreateScheduleScreenState extends State<CreateScheduleScreen> {
                   ),
                 ),
                 SizedBox(
-                  height: 24,
+                  height: 16,
                 ),
                 ElevatedButton.icon(
                   icon: Icon(Icons.add),
@@ -274,10 +282,13 @@ class _CreateScheduleScreenState extends State<CreateScheduleScreen> {
                     "Adicionar agendamento",
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                   ),
-                  onPressed: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: ((context) => CreateScheduleScreen()))),
+                  onPressed: () => {
+                    sendValuesToApi()
+                    // Navigator.push(
+                    //   context,
+                    //   MaterialPageRoute(
+                    //       builder: ((context) => CreateScheduleScreen())));
+                  },
                   style: ElevatedButton.styleFrom(
                     minimumSize: const Size.fromHeight(40),
                     padding: const EdgeInsets.symmetric(

@@ -74,10 +74,6 @@ class _HomeScreenState extends State<HomeScreen> {
       for (var i = 1; i <= totalDays; i++) {
         addToList(i);
       }
-
-      // for (var date in listOfDates) {
-      //   print(date);
-      // }
     }
 
     // _scrollListener() {
@@ -141,7 +137,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       children: [
                         Expanded(
                           child: SizedBox(
-                            height: 95,
+                            height: 90,
                             child: ListView.builder(
                                 scrollDirection: Axis.horizontal,
                                 shrinkWrap: true,
@@ -210,9 +206,9 @@ class WeekDayCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 75,
+      width: 70,
       margin: EdgeInsets.only(right: 12),
-      padding: const EdgeInsets.only(left: 8, right: 8),
+      padding: const EdgeInsets.only(left: 2, right: 2),
       decoration: BoxDecoration(
         color: isCurrentDay() ? Color.fromRGBO(64, 123, 255, 1) : Colors.white,
         borderRadius: BorderRadius.circular(14.0),
@@ -232,11 +228,11 @@ class WeekDayCard extends StatelessWidget {
         ),
         Text(
           this.day,
-          style: TextStyle(
+          style: GoogleFonts.poppins(
               color: isCurrentDay()
                   ? Colors.white
                   : Color.fromRGBO(64, 123, 255, 1),
-              fontWeight: FontWeight.w700,
+              fontWeight: FontWeight.bold,
               fontSize: 28),
         )
       ]),
@@ -396,9 +392,7 @@ class SectionHeader extends StatelessWidget {
           Text('Agendamentos do mês',
               style: GoogleFonts.poppins(
                 textStyle: TextStyle(
-                  color: Color.fromRGBO(120, 120, 120, 1),
-                  fontSize: 16,
-                ),
+                    color: Color.fromRGBO(120, 120, 120, 1), fontSize: 16),
               )),
           Text(
             'Ver todos',
