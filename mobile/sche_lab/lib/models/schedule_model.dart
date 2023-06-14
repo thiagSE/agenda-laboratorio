@@ -112,9 +112,4 @@ class Schedule {
       endTime: DateTime(2023, 5, 26, 21, 30, 0),
     ),
   ];
-
-  static getDaySchedule(int day) {
-    // Todo call to api and return the Schedule list
-    print("/api/v1/schedules/${day}");
-  }
 }

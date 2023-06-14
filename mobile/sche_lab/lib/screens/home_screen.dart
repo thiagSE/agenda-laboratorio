@@ -1,12 +1,16 @@
 // ignore: import_of_legacy_library_into_null_safe
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:http/http.dart' as http;
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:sche_lab/models/weeks.dart';
 import 'package:sche_lab/screens/create_schedule_screen.dart';
 
 import '../components/empty_home_screen.dart';
+import '../models/agendamento.dart';
 import '../models/schedule_model.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -17,19 +21,50 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  // List<Schedule> schedules = [];
+  List<Schedule> schedules = Schedule.schedules;
+  List<Weeks> daysOfMonth = [];
+  late int selectedDay;
+  late Future<List<Agendamento>> agendamentos;
+
+  @override
+  void initState() async {
+    // TODO: implement initState
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    List<Weeks> daysOfMonth = [];
-    // List<Schedule> schedules = [];
-    List<Schedule> schedules = Schedule.schedules;
-
     initializeDateFormatting();
-
     final ScrollController _controller = ScrollController();
 
-    void _scrollDown() {
-      _controller.animateTo(2 * 74,
-          duration: const Duration(milliseconds: 1000), curve: Curves.bounceIn);
+    Future<List<Agendamento>> getDailySchedules() async {
+      final response = await http.post(
+          Uri.parse('http://localhost:8080/api/v1/agendamentos'),
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+          },
+          body: {
+            jsonEncode({
+              {
+                "startDate": "2023-05-${DateTime.now().day}T00:00:00.900+00:00",
+                "finalDate": "2023-05-${DateTime.now().day}T23:59:00.900+00:00"
+              }
+            })
+          });
+
+      if (response.statusCode == 200) {
+        List listSchedules = json.decode(response.body);
+        return listSchedules.map((json) => Agendamento.fromJson(json)).toList();
+      } else {
+        throw Exception('Não foi possível carregar os Agendamentos');
+      }
+    }
+
+    void _handleDay(int day) async {
+      setState(() {
+        selectedDay = day;
+      });
     }
 
     int daysInMonth(DateTime date) {
@@ -67,12 +102,6 @@ class _HomeScreenState extends State<HomeScreen> {
     }
 
     generateDates();
-    _scrollDown();
-
-    @override
-    void initState() {
-      super.initState();
-    }
 
     @override
     _floatButtonAdd() {
@@ -90,6 +119,11 @@ class _HomeScreenState extends State<HomeScreen> {
         );
       }
     }
+
+    // @override
+    // void initState() {
+    //   super.initState();
+    // }
 
     return Container(
         decoration: BoxDecoration(color: Color.fromRGBO(245, 245, 245, 1)),
@@ -121,16 +155,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                 itemCount: daysOfMonth.length,
                                 itemBuilder: (context, index) {
                                   return GestureDetector(
-                                    onTap: () {
-                                      print("button pressed");
-                                      Schedule.getDaySchedule(
-                                          daysOfMonth[index].day);
-                                      print(daysOfMonth[index].day);
-                                      print(daysOfMonth[index].weekDay);
+                                    onTap: () async {
+                                      // await this.getDailySchedules();
+                                      _handleDay(daysOfMonth[index].day);
                                     },
                                     child: WeekDayCard(
                                         weekDay: daysOfMonth[index].weekDay,
-                                        day: daysOfMonth[index].day),
+                                        day: daysOfMonth[index].day,
+                                        selectedDay: selectedDay),
                                   );
                                 }),
                           ),
@@ -167,17 +199,27 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
-class WeekDayCard extends StatelessWidget {
-  WeekDayCard({super.key, required this.weekDay, required this.day});
+class WeekDayCard extends StatefulWidget {
+  WeekDayCard(
+      {super.key,
+      required this.weekDay,
+      required this.day,
+      required this.selectedDay});
 
   final String weekDay;
   final int day;
+  final int selectedDay;
 
+  @override
+  State<WeekDayCard> createState() => _WeekDayCardState();
+}
+
+class _WeekDayCardState extends State<WeekDayCard> {
   bool isCurrentDay() {
     final currentDate = DateTime.now();
     final currentDay = DateFormat.d().format(currentDate);
 
-    if (int.parse(currentDay) == day) return true;
+    if (int.parse(currentDay) == widget.day) return true;
 
     return false;
   }
@@ -189,12 +231,18 @@ class WeekDayCard extends StatelessWidget {
       margin: EdgeInsets.only(right: 12),
       padding: const EdgeInsets.only(left: 2, right: 2),
       decoration: BoxDecoration(
-        color: isCurrentDay() ? Color.fromRGBO(64, 123, 255, 1) : Colors.white,
-        borderRadius: BorderRadius.circular(14.0),
-      ),
+          color:
+              isCurrentDay() ? Color.fromRGBO(64, 123, 255, 1) : Colors.white,
+          borderRadius: BorderRadius.circular(14.0),
+          border: Border.all(
+              color: Color.fromRGBO(64, 123, 255, 1),
+              width: 1,
+              style: widget.selectedDay == widget.day
+                  ? BorderStyle.solid
+                  : BorderStyle.none)),
       child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
         Text(
-          weekDay,
+          widget.weekDay,
           style: TextStyle(
               color: isCurrentDay()
                   ? Colors.white
@@ -206,7 +254,7 @@ class WeekDayCard extends StatelessWidget {
           height: 4,
         ),
         Text(
-          "${day}",
+          "${widget.day}",
           style: GoogleFonts.poppins(
               color: isCurrentDay()
                   ? Colors.white
@@ -219,7 +267,7 @@ class WeekDayCard extends StatelessWidget {
   }
 }
 
-class ScheduleListComponent extends StatelessWidget {
+class ScheduleListComponent extends StatefulWidget {
   const ScheduleListComponent({
     super.key,
     required this.schedules,
@@ -227,6 +275,11 @@ class ScheduleListComponent extends StatelessWidget {
 
   final List<Schedule> schedules;
 
+  @override
+  State<ScheduleListComponent> createState() => _ScheduleListComponentState();
+}
+
+class _ScheduleListComponentState extends State<ScheduleListComponent> {
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -255,7 +308,7 @@ class ScheduleListComponent extends StatelessWidget {
         ListView.builder(
             physics: NeverScrollableScrollPhysics(),
             shrinkWrap: true,
-            itemCount: schedules.length,
+            itemCount: widget.schedules.length,
             itemBuilder: (context, index) {
               return Container(
                 margin: EdgeInsets.only(top: 24),
@@ -270,7 +323,7 @@ class ScheduleListComponent extends StatelessWidget {
                           children: [
                             Text(
                                 DateFormat(DateFormat.HOUR24_MINUTE, 'pt_BR')
-                                    .format(schedules[index].startTime),
+                                    .format(widget.schedules[index].startTime),
                                 style: TextStyle(
                                   color: Color.fromRGBO(28, 28, 28, 1),
                                   fontSize: 14,
@@ -281,7 +334,7 @@ class ScheduleListComponent extends StatelessWidget {
                             ),
                             Text(
                               DateFormat(DateFormat.HOUR24_MINUTE, 'pt_BR')
-                                  .format(schedules[index].endTime),
+                                  .format(widget.schedules[index].endTime),
                               style: TextStyle(
                                   color: Color.fromRGBO(171, 171, 171, 1),
                                   fontWeight: FontWeight.w400,
@@ -310,7 +363,7 @@ class ScheduleListComponent extends StatelessWidget {
                           children: [
                             Container(
                                 child: Text(
-                              schedules[index].title,
+                              widget.schedules[index].title,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
@@ -325,7 +378,7 @@ class ScheduleListComponent extends StatelessWidget {
                             ),
                             Container(
                                 child: Text(
-                              schedules[index].description,
+                              widget.schedules[index].description,
                               style: TextStyle(
                                   color: index == 0
                                       ? Colors.white
@@ -336,7 +389,7 @@ class ScheduleListComponent extends StatelessWidget {
                               height: 18,
                             ),
                             Container(
-                                child: Text(schedules[index].userName,
+                                child: Text(widget.schedules[index].userName,
                                     style: TextStyle(
                                         color: index == 0
                                             ? Colors.white
@@ -356,11 +409,14 @@ class ScheduleListComponent extends StatelessWidget {
   }
 }
 
-class SectionHeader extends StatelessWidget {
-  const SectionHeader({
-    super.key,
-  });
+class SectionHeader extends StatefulWidget {
+  const SectionHeader({super.key, selectedDay});
 
+  @override
+  State<SectionHeader> createState() => _SectionHeaderState();
+}
+
+class _SectionHeaderState extends State<SectionHeader> {
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -379,11 +435,16 @@ class SectionHeader extends StatelessWidget {
   }
 }
 
-class _TitleMain extends StatelessWidget {
+class _TitleMain extends StatefulWidget {
   const _TitleMain({
     super.key,
   });
 
+  @override
+  State<_TitleMain> createState() => _TitleMainState();
+}
+
+class _TitleMainState extends State<_TitleMain> {
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -404,7 +465,7 @@ class _TitleMain extends StatelessWidget {
                 style: TextStyle(
                     fontWeight: FontWeight.w700,
                     color: Color.fromRGBO(64, 123, 255, 1),
-                    fontSize: 28)),
+                    fontSize: 24)),
           ]),
         ),
       ],
