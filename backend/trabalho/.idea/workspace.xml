@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="8111d247-1df0-4269-9cd5-14aba2cbd7fd" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/main/java/br/com/aula/api/trabalho/controller/AgendamentoController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/br/com/aula/api/trabalho/model/Agendamento.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/br/com/aula/api/trabalho/model/EnumPeriodo.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/br/com/aula/api/trabalho/model/Turma.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/br/com/aula/api/trabalho/repository/AgendamentoRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/br/com/aula/api/trabalho/controller/AgendamentoController.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/br/com/aula/api/trabalho/model/Agendamento.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/br/com/aula/api/trabalho/model/EnumPeriodo.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/br/com/aula/api/trabalho/model/Turma.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/br/com/aula/api/trabalho/repository/AgendamentoRepository.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/br/com/aula/api/trabalho/controller/UsuarioController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/br/com/aula/api/trabalho/controller/UsuarioController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/br/com/aula/api/trabalho/repository/UsuarioRepositorio.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/br/com/aula/api/trabalho/repository/UsuarioRepositoriy.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/br/com/aula/api/trabalho/repository/UsuarioRepositoriy.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/br/com/aula/api/trabalho/servico/Servico.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/br/com/aula/api/trabalho/servico/UsuarioService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/br/com/aula/api/trabalho/controller/UsuarioController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/br/com/aula/api/trabalho/controller/UsuarioController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/br/com/aula/api/trabalho/repository/UsuarioRepositorio.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/br/com/aula/api/trabalho/repository/UsuarioRepositoriy.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/br/com/aula/api/trabalho/repository/UsuarioRepositoriy.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/br/com/aula/api/trabalho/servico/Servico.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/br/com/aula/api/trabalho/servico/UsuarioService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/br/com/aula/api/trabalho/servico/UsuarioService.class" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="useMavenConfig" value="true" />
+      </MavenGeneralSettings>
+    </option>
+    <option name="importingSettings">
+      <MavenImportingSettings>
+        <option name="workspaceImportEnabled" value="true" />
+      </MavenImportingSettings>
+    </option>
+  </component>
+  <component name="ProjectId" id="2QJQawT2VLMM7dB9dozjIGWkehL" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/lucas/Documents/WWW/agenda-laboratorio/backend/trabalho&quot;
+  }
+}</component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="8111d247-1df0-4269-9cd5-14aba2cbd7fd" name="Changes" comment="" />
+      <created>1685069275947</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1685069275947</updated>
+    </task>
+    <servers />
+  </component>
+</project>
